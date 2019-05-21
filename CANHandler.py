@@ -4,25 +4,7 @@ from time import sleep
 
 def log_data(msg):
     print(msg)
-    dane_do_sprawdzenia = checkData(msg)
-    """
-    print(msg.data)
-    resp[0] = 0
-    i = 0
-    for x in msg: #printuje dane w kolumnach
-        resp[i] = hex(x)[2:]
-        i = i+1
-    i = 0
-    print("Dane szesnastkowy: ",resp)
-    
-    print("Dane dziesiatkowy: ",msg.data) #printuje dane w wektorze
-    #szukamy kodu pakietu
-    print("Długość pakietu: ", msg.dlc) # długosc pakietu
-    identyfikator = hex(msg.mid)[2:] # identyfikator pakietu
-    print("ID: ", identyfikator) 
-    print(msg.get_data())
-    return msg.dlc
-    """
+    toCehckData = checkData(msg)
 
 class checkData:
     def __init__(self, can_message):
@@ -38,7 +20,6 @@ def general_decoder(idx, data):
     if len(data) < 8:
         return {}
     elif idx == '0x19b50001':
-        print("bateryjka")
         min_cell_voltage = data[0] / 100 + 2
         max_cell_voltage = data[1] / 100 + 2
         avg_cell_voltage = data[2] / 100 + 2
@@ -51,12 +32,10 @@ def general_decoder(idx, data):
         sleep(0.5)
         #return DECODERS.battery_voltage_overall_parameters(data)
     elif idx == '0x19b50002':
-        print("bateryjka2")
+        print("2")
         #return DECODERS.cell_module_temperature_overall_parameters(data)
     elif idx == '0x19b50500':
-        print("bateryjka3")
-        #return DECODERS.state_of_charge_parameters(data)
-    #return {}
+        print("3")
 
   
 usbtin = USBtin()
