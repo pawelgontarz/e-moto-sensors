@@ -29,7 +29,6 @@ def general_decoder(idx, data):
         print("max cell voltage: ",max_cell_voltage)
         print("avg cell voltage: ",avg_cell_voltage)
         print("total cell voltage: ",total_cell_voltage)
-        sleep(0.5)
         #return DECODERS.battery_voltage_overall_parameters(data)
     elif idx == '0x19b50002':
         print("2")
