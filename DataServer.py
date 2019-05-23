@@ -3,6 +3,10 @@ from pyusbtin.canmessage import CANMessage
 import time
 import socket
 
+file=open("/home/smart/Pulpit/log.txt","w")
+file.write("Starting script!")
+file.close()
+
 # MOTO PARAMETERSS CLASS
 class Parameters:
     def __init__(self,total_voltage):
@@ -41,12 +45,28 @@ def general_decoder(idx, data):
         #print("ID: "+idx)
         pass
 
-  
-time.sleep(8) 
-usbtin = USBtin()
-usbtin.connect("/dev/ttyACM0")
-usbtin.add_message_listener(log_data)
-usbtin.open_can_channel(250000, USBtin.ACTIVE)
+
+
+while True:
+    print("Connecting...")
+    try:
+        usbtin = USBtin()
+        usbtin.connect("/dev/ttyACM0")
+        usbtin.add_message_listener(log_data)
+        usbtin.open_can_channel(250000, USBtin.ACTIVE)
+        break
+    except ValueError:
+        print("Something goes wrong...")
+        time.sleep(1)
+    except:
+        print("No port detected...")
+        time.sleep(1)
+
+print("Connected to USBTin CAN Converter!")
+
+file=open("/home/smart/Pulpit/log1.txt","w")
+file.write("Connected to USBTin CAN Converter!")
+file.close()
 
 #CREATE SERVER
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
