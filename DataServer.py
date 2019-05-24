@@ -13,7 +13,7 @@ file.close()
 DEBUG = False
 
 # CREATE PARAMETERS OBJECT
-moto_parameters = Parameters
+moto_parameters = Parameters()
 
 def log_data(msg):
     try:
