@@ -132,8 +132,7 @@ while True:
             else:
                 print('[Server] No more data from: ', client_address)
                 break
-            time.sleep(0.01)  
-            print("total_cell_voltage value: " + str(moto_parameters.total_cell_voltage))      
+            time.sleep(0.5)      
     finally:
         connection.close()
 
