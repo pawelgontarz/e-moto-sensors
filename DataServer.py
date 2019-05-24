@@ -9,6 +9,9 @@ file=open("/home/parallels/Desktop/log.txt","w")
 file.write("Starting script!")
 file.close()
 
+#Print CAN receiving data
+DEBUG = False
+
 # CREATE PARAMETERS OBJECT
 moto_parameters = Parameters
 
@@ -25,16 +28,34 @@ def general_decoder(idx, data):
         print('len(data) < 8')
         return {}
     elif idx == '0x19b50001': #battery_voltage_overall_parameters
-        decoded_data = DECODERS.battery_voltage_overall_parameters(data)
+        decoded_data = DECODERS.battery_voltage_overall_parameters(data, DEBUG)
+        moto_parameters.min_cell_voltage = decoded_data['min_cell_voltage']
+        moto_parameters.max_cell_voltage = decoded_data['max_cell_voltage']
+        moto_parameters.average_cell_voltage = decoded_data['average_cell_voltage']
+        moto_parameters.total_cell_voltage = decoded_data['total_cell_voltage']
     elif idx == '0x19b50002': #cell_module_temperature_overall_parameters
-        decoded_data = DECODERS.cell_module_temperature_overall_parameters(data)
+        decoded_data = DECODERS.cell_module_temperature_overall_parameters(data, DEBUG)
+        moto_parameters.min_cell_module_temp = decoded_data['min_cell_module_temp']
+        moto_parameters.max_cell_module_temp = decoded_data['max_cell_module_temp']
+        moto_parameters.average_cell_module_temp = decoded_data['average_cell_module_temp']        
     elif idx == '0x19b50008': #cell_temperature_overall_parameters
-        decoded_data = DECODERS.cell_temperature_overall_parameters(data)
+        decoded_data = DECODERS.cell_temperature_overall_parameters(data, DEBUG)
+        moto_parameters.min_cell_temp = decoded_data['min_cell_temp']
+        moto_parameters.max_cell_temp = decoded_data['max_cell_temp']
+        moto_parameters.average_cell_temp = decoded_data['average_cell_temp']
     elif idx == '0x19b50500': #state_of_charge_parameters
-        decoded_data = DECODERS.state_of_charge_parameters(data)
+        decoded_data = DECODERS.state_of_charge_parameters(data, DEBUG)
+        moto_parameters.battery_current = decoded_data['battery_current']
+        moto_parameters.estimated_charge = decoded_data['estimated_charge']
+        moto_parameters.estimated_state_of_charge = decoded_data['estimated_state_of_charge']       
     elif idx == '0x19b50600': #energy_parameters
-        decoded_data = DECODERS.energy_parameters(data)
+        decoded_data = DECODERS.energy_parameters(data, DEBUG)
+        moto_parameters.estimated_consumption = decoded_data['estimated_consumption']
+        moto_parameters.estimated_energy = decoded_data['estimated_energy']
+        moto_parameters.estimated_distance_left = decoded_data['estimated_distance_left']
+        moto_parameters.distance_traveled = decoded_data['distance_traveled']
 
+# WORKS UNTIL CONNECT WITH USBTin
 while True:
     print("[USBTin] Connecting to USBTin port...")
     try:
@@ -49,7 +70,6 @@ while True:
     except:
         print("No port detected...")
         time.sleep(1)
-
 print("[USBTin] Connected to USBTin port!")
 
 file=open("/home/parallels/Desktop/log1.txt","w")
@@ -62,12 +82,6 @@ server_address = ('localhost', 10001)
 print('[Server] Starting up on %s port %s' % server_address)
 sock.bind(server_address)
 sock.listen(1)
-
-#while(True):
-    #print("tick")
-    #print("Dziala?: " + str(moto_parameters.total_cell_voltage))
-    #usbtin.send(CANMessage(0x100, "\x11"))
-    #sleep(1)
 
 while True:
     # Wait for a connection
