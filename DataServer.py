@@ -88,37 +88,47 @@ while True:
     print('[Server] Waiting for a connection')
     connection, client_address = sock.accept()
     try:
-        print ('[Server] Connection from: ', client_address)
-        speed = 0
-        current = 0
-        voltage = 0
-        soc = 10       
+        print ('[Server] Connection from: ', client_address)  
         while True:           
             data = connection.recv(1024)
-            moto_parameters.total_cell_voltage = voltage
-            #print("total_cell_voltage value: " + str(voltage))
-            voltage = voltage + 2
-            soc = soc + 1
-
-            if voltage >= 160:
-                voltage = 0
-                               
-            if soc > 100:
-                soc = 0
-
             print(data.decode("utf-8"))
             if data:
-                if(data.decode("utf-8")=="speed"):
-                    connection.sendall(str(speed).encode())
-                elif(data.decode("utf-8")=="current"):
-                    connection.sendall(str(current).encode())
-                elif(data.decode("utf-8")=="voltage"):
-                    connection.sendall(str(voltage).encode())
-                elif(data.decode("utf-8")=="soc"):
-                    connection.sendall(str(soc).encode())                    
+                if(data.decode("utf-8")=="min_cell_voltage"): #battery_voltage_overall_parameters
+                    connection.sendall(str(moto_parameters.min_cell_voltage).encode())
+                elif(data.decode("utf-8")=="max_cell_voltage"):
+                    connection.sendall(str(moto_parameters.max_cell_voltage).encode())
+                elif(data.decode("utf-8")=="average_cell_voltage"):
+                    connection.sendall(str(moto_parameters.average_cell_voltage).encode())
+                elif(data.decode("utf-8")=="total_cell_voltage"):
+                    connection.sendall(str(moto_parameters.total_cell_voltage).encode())
+                elif(data.decode("utf-8")=="min_cell_module_temp"): #cell_module_temperature_overall_parameters
+                    connection.sendall(str(moto_parameters.min_cell_module_temp).encode())
+                elif(data.decode("utf-8")=="max_cell_module_temp"): 
+                    connection.sendall(str(moto_parameters.max_cell_module_temp).encode()) 
+                elif(data.decode("utf-8")=="average_cell_module_temp"): 
+                    connection.sendall(str(moto_parameters.average_cell_module_temp).encode())     
+                elif(data.decode("utf-8")=="min_cell_temp"): #cell_temperature_overall_parameters
+                    connection.sendall(str(moto_parameters.min_cell_temp).encode())
+                elif(data.decode("utf-8")=="max_cell_temp"): 
+                    connection.sendall(str(moto_parameters.max_cell_temp).encode()) 
+                elif(data.decode("utf-8")=="average_cell_temp"): 
+                    connection.sendall(str(moto_parameters.average_cell_temp).encode())  
+                elif(data.decode("utf-8")=="battery_current"): #state_of_charge_parameters
+                    connection.sendall(str(moto_parameters.battery_current).encode())
+                elif(data.decode("utf-8")=="estimated_charge"): 
+                    connection.sendall(str(moto_parameters.estimated_charge).encode()) 
+                elif(data.decode("utf-8")=="estimated_state_of_charge"): 
+                    connection.sendall(str(moto_parameters.estimated_state_of_charge).encode())   
+                elif(data.decode("utf-8")=="estimated_consumption"): #energy_parameters
+                    connection.sendall(str(moto_parameters.estimated_consumption).encode())
+                elif(data.decode("utf-8")=="estimated_energy"): 
+                    connection.sendall(str(moto_parameters.estimated_energy).encode()) 
+                elif(data.decode("utf-8")=="estimated_distance_left"): 
+                    connection.sendall(str(moto_parameters.estimated_distance_left).encode())   
+                elif(data.decode("utf-8")=="distance_traveled"): 
+                    connection.sendall(str(moto_parameters.distance_traveled).encode())                  
                 else:
-                    #connection.sendall(b'No request!')
-                    pass
+                    print("[Server] No request from client.")
             else:
                 print('[Server] No more data from: ', client_address)
                 break
