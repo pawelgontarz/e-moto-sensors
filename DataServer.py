@@ -12,14 +12,13 @@ file.close()
 # CREATE PARAMETERS OBJECT
 moto_parameters = Parameters
 
-def log_data(can_message):
-        try:
-            idx = hex(can_message.mid)
-            data = can_message.get_data()
-            ## czy to musi byc przypisane do zmiennej???????????
-            decoded_data = general_decoder(idx, data)
-        except:
-            print('Messages queue is EMPTY!')
+def log_data(msg):
+    try:
+        idx = hex(msg.mid)
+        data = msg.get_data()
+        general_decoder(idx, data)
+    except:
+        print('Messages queue is EMPTY!')
    
 def general_decoder(idx, data):
     if len(data) < 8:
@@ -27,11 +26,7 @@ def general_decoder(idx, data):
         return {}
     elif idx == '0x19b50001': #battery_voltage_overall_parameters
         decoded_data = DECODERS.battery_voltage_overall_parameters(data)
-        moto_parameters.total_cell_voltage = decoded_data['total_cell_voltage']
-        print(str(moto_parameters.total_cell_voltage))
-        #total_cell_voltage = int(total_cell_voltage, 16) // 100
     elif idx == '0x19b50002': #cell_module_temperature_overall_parameters
-        #print("ID: " + idx)
         decoded_data = DECODERS.cell_module_temperature_overall_parameters(data)
     elif idx == '0x19b50008': #cell_temperature_overall_parameters
         decoded_data = DECODERS.cell_temperature_overall_parameters(data)
