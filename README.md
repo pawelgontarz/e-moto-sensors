@@ -1,4 +1,4 @@
-# Can DataHandler
+# CAN DataHandler
 DataHandler to processing data between CANBus and DashboardClient via TCP protocol.
 
 ---
