@@ -99,8 +99,8 @@ def print_data():
                 #print(data[0])
                 if data[0] == "$GPVTG":
                         speed = round(float(data[7]))
-                        print("[GPS THREAD] Speed: "+str(speed)+" Km/h")
                         moto_parameters.speed = speed + random.randint(1,40)
+                        print("[GPS THREAD] Speed: "+str(moto_parameters.speed)+" Km/h")
                         #moto_parameters.speed = speed
 
 
