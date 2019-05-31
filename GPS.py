@@ -48,7 +48,7 @@ class GPSHandler(Thread):
                     longitude = 1*(longitudeDegree + longitudeMin)
                 elif longitudeMark == "W":
                     longitude = -1*(longitudeDegree + longitudeMin)
-                print(str(latitude) + ' ' + str(longitude))
+                #print(str(latitude) + ' ' + str(longitude))
                 self.parameters.lat = latitude
                 self.parameters.lon = longitude
             except:

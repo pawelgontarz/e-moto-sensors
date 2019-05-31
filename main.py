@@ -99,7 +99,7 @@ while True:
         print ('[Server] Connection from: ', client_address)  
         while True:           
             data = connection.recv(1024)
-            print(data.decode("utf-8"))
+            #print("[Server] Request: " + data.decode("utf-8"))
             if data:
                 if(data.decode("utf-8")=="min_cell_voltage"): #battery_voltage_overall_parameters
                     connection.sendall(str(moto_parameters.min_cell_voltage).encode())
@@ -139,8 +139,10 @@ while True:
                     connection.sendall(str(moto_parameters.speed).encode())    
                 elif(data.decode("utf-8")=="lat"):
                     connection.sendall(str(moto_parameters.lat).encode())  
+                    print("Moto LAT: " + str(moto_parameters.lat))  
                 elif(data.decode("utf-8")=="lon"): 
-                    connection.sendall(str(moto_parameters.lon).encode())              
+                    connection.sendall(str(moto_parameters.lon).encode())     
+                    print("Moto LON: " + str(moto_parameters.lon))         
                 else:
                     print("[Server] No request from client.")
             else:
