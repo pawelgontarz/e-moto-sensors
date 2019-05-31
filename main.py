@@ -2,6 +2,7 @@ from pyusbtin.usbtin import USBtin
 from pyusbtin.canmessage import CANMessage
 from Parameters import Parameters
 from Decoder import DECODERS
+from GPS import GPSHandler
 import time
 import socket
 import threading
@@ -76,40 +77,8 @@ def general_decoder(idx, data):
 #print("[USBTin] Connected to USBTin port!")
 
 # GPS CONNECTION
-while True:
-    print("[GPS] Connecting to GPS port...")
-    try:
-        gps = serial.Serial("/dev/ttyACM0", baudrate= 115200)
-        break
-    except ValueError:
-        print("Something goes wrong...")
-        time.sleep(1)
-    except:
-        print("No port detected...")
-        time.sleep(1)
-print("[GPS] Connected to GPS port!")
-
-motoParams = Parameters()
-
-def print_data():
-        while True:
-                line =gps.readline()
-                #print(line.decode("utf-8")) 
-                data = line.decode().split(",")
-                #print(data[0])
-                if data[0] == "$GPVTG":
-                        try:
-                            speed = round(float(data[7]))
-                            print("Speed: " + str(speed))
-                            moto_parameters.speed = speed + random.randint(1,40)
-                            #print("[GPS THREAD] Speed: "+str(moto_parameters.speed)+" Km/h")
-                            #moto_parameters.speed = speed
-                        except:
-                            print("[GPS THREAD] Empty value!")
-
-
-printer = threading.Thread(target=print_data)
-printer.start()
+gps = GPSHandler(moto_parameters)
+gps.start()
 
 file=open("/home/parallels/Desktop/log1.txt","w")
 file.write("Connected to USBTin CAN Converter!")
