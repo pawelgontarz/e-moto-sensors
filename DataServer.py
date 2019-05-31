@@ -76,7 +76,19 @@ def general_decoder(idx, data):
 #print("[USBTin] Connected to USBTin port!")
 
 # GPS CONNECTION
-gps = serial.Serial("/dev/ttyACM0", baudrate= 115200)
+while True:
+    print("[GPS] Connecting to GPS port...")
+    try:
+        gps = serial.Serial("/dev/ttyACM0", baudrate= 115200)
+        break
+    except ValueError:
+        print("Something goes wrong...")
+        time.sleep(1)
+    except:
+        print("No port detected...")
+        time.sleep(1)
+print("[GPS] Connected to GPS port!")
+
 motoParams = Parameters()
 
 def print_data():
@@ -88,8 +100,8 @@ def print_data():
                 if data[0] == "$GPVTG":
                         speed = round(float(data[7]))
                         print("[GPS THREAD] Speed: "+str(speed)+" Km/h")
-                        #moto_parameters.speed = speed + random.randint(1,20)
-                        moto_parameters.speed = speed
+                        moto_parameters.speed = speed + random.randint(1,40)
+                        #moto_parameters.speed = speed
 
 
 printer = threading.Thread(target=print_data)
