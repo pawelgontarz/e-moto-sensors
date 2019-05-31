@@ -136,8 +136,11 @@ while True:
                 elif(data.decode("utf-8")=="distance_traveled"): 
                     connection.sendall(str(moto_parameters.distance_traveled).encode())  
                 elif(data.decode("utf-8")=="speed"): #gps_parameters
-                    connection.sendall(str(moto_parameters.speed).encode())  
-                    #print('[Server SEND] Speed: ', moto_parameters.speed)              
+                    connection.sendall(str(moto_parameters.speed).encode())    
+                elif(data.decode("utf-8")=="lat"):
+                    connection.sendall(str(moto_parameters.lat).encode())  
+                elif(data.decode("utf-8")=="lon"): 
+                    connection.sendall(str(moto_parameters.lon).encode())              
                 else:
                     print("[Server] No request from client.")
             else:

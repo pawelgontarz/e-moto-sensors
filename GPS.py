@@ -49,6 +49,8 @@ class GPSHandler(Thread):
                 elif longitudeMark == "W":
                     longitude = -1*(longitudeDegree + longitudeMin)
                 print(str(latitude) + ' ' + str(longitude))
+                self.parameters.lat = latitude
+                self.parameters.lon = longitude
             except:
                 print("[GPS THREAD] Lat/lon error!")
 
@@ -57,7 +59,7 @@ class GPSHandler(Thread):
         if data[0] == "$GPVTG": 
             try:
                 speed = round(float(data[7]))
-                print("Speed: " + str(speed))
+                #print("Speed: " + str(speed))
                 #moto_parameters.speed = speed + random.randint(1,40)
                 self.parameters.speed = speed
             except:
