@@ -98,10 +98,14 @@ def print_data():
                 data = line.decode().split(",")
                 #print(data[0])
                 if data[0] == "$GPVTG":
-                        speed = round(float(data[7]))
-                        moto_parameters.speed = speed + random.randint(1,40)
-                        print("[GPS THREAD] Speed: "+str(moto_parameters.speed)+" Km/h")
-                        #moto_parameters.speed = speed
+                        try:
+                            speed = round(float(data[7]))
+                            print("Speed: " + str(speed))
+                            moto_parameters.speed = speed + random.randint(1,40)
+                            #print("[GPS THREAD] Speed: "+str(moto_parameters.speed)+" Km/h")
+                            #moto_parameters.speed = speed
+                        except:
+                            print("[GPS THREAD] Empty value!")
 
 
 printer = threading.Thread(target=print_data)
