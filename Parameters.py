@@ -1,6 +1,11 @@
 # MOTO PARAMETERSS CLASS
 class Parameters:
     def __init__(self):
+        #<-----------------------GPS PARAMETERS---------------------------->
+        #speed
+        self.speed = 0
+        #<----------------------------------------------------------------->
+
         #<-----------------------BATTERY PARAMETERS------------------------>
         #battery_voltage_overall_parameters
         self.min_cell_voltage = 0

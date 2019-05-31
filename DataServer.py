@@ -4,6 +4,9 @@ from Parameters import Parameters
 from Decoder import DECODERS
 import time
 import socket
+import threading
+import serial
+import random
 
 file=open("/home/parallels/Desktop/log.txt","w")
 file.write("Starting script!")
@@ -56,21 +59,41 @@ def general_decoder(idx, data):
         moto_parameters.distance_traveled = decoded_data['distance_traveled']
 
 # WORKS UNTIL CONNECT WITH USBTin
-while True:
-    print("[USBTin] Connecting to USBTin port...")
-    try:
-        usbtin = USBtin()
-        usbtin.connect("/dev/ttyACM0")
-        usbtin.add_message_listener(log_data)
-        usbtin.open_can_channel(250000, USBtin.ACTIVE)
-        break
-    except ValueError:
-        print("Something goes wrong...")
-        time.sleep(1)
-    except:
-        print("No port detected...")
-        time.sleep(1)
-print("[USBTin] Connected to USBTin port!")
+#while True:
+#    print("[USBTin] Connecting to USBTin port...")
+#    try:
+#        usbtin = USBtin()
+#        usbtin.connect("/dev/ttyACM0")
+#        usbtin.add_message_listener(log_data)
+#        usbtin.open_can_channel(250000, USBtin.ACTIVE)
+#        break
+#    except ValueError:
+#        print("Something goes wrong...")
+#        time.sleep(1)
+#    except:
+ #       print("No port detected...")
+ #       time.sleep(1)
+#print("[USBTin] Connected to USBTin port!")
+
+# GPS CONNECTION
+gps = serial.Serial("/dev/ttyACM0", baudrate= 115200)
+motoParams = Parameters()
+
+def print_data():
+        while True:
+                line =gps.readline()
+                #print(line.decode("utf-8")) 
+                data = line.decode().split(",")
+                #print(data[0])
+                if data[0] == "$GPVTG":
+                        speed = round(float(data[7]))
+                        print("[GPS THREAD] Speed: "+str(speed)+" Km/h")
+                        #moto_parameters.speed = speed + random.randint(1,20)
+                        moto_parameters.speed = speed
+
+
+printer = threading.Thread(target=print_data)
+printer.start()
 
 file=open("/home/parallels/Desktop/log1.txt","w")
 file.write("Connected to USBTin CAN Converter!")
@@ -126,13 +149,16 @@ while True:
                 elif(data.decode("utf-8")=="estimated_distance_left"): 
                     connection.sendall(str(moto_parameters.estimated_distance_left).encode())   
                 elif(data.decode("utf-8")=="distance_traveled"): 
-                    connection.sendall(str(moto_parameters.distance_traveled).encode())                  
+                    connection.sendall(str(moto_parameters.distance_traveled).encode())  
+                elif(data.decode("utf-8")=="speed"): #gps_parameters
+                    connection.sendall(str(moto_parameters.speed).encode())  
+                    #print('[Server SEND] Speed: ', moto_parameters.speed)              
                 else:
                     print("[Server] No request from client.")
             else:
                 print('[Server] No more data from: ', client_address)
                 break
-            time.sleep(0.5)      
+            time.sleep(0.4)      
     finally:
         connection.close()
 
