@@ -7,16 +7,18 @@ import threading
 import serial
 import random
 
+debug = False
+
 # CREATE PARAMETERS OBJECT
 moto_parameters = Parameters()
 
-# WORKS UNTIL CONNECT WITH USBTin
-can = CAN_Data_Handler(moto_parameters)
+# CAN USBTin CONNECTION
+can = CAN_Data_Handler(moto_parameters, debug)
 can.start()
 
 # GPS CONNECTION
-gps = GPSHandler(moto_parameters)
-#gps.start()
+gps = GPSHandler(moto_parameters, debug)
+gps.start()
 
 file=open("/home/parallels/Desktop/log1.txt","w")
 file.write("Connected to USBTin CAN Converter!")

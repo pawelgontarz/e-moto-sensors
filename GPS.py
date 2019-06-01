@@ -5,13 +5,14 @@ import serial.tools.list_ports
 import re
 
 class GPSHandler(Thread):
-    def __init__(self, parameters):
+    def __init__(self, parameters, debug):
         super().__init__()
         self.lat = 0
         self.lon = 0
         self.USB_port = ""
+        self.gps_detected = False
         self.running = True
-        self.debug = False
+        self.debug = debug
         self.parameters = parameters
 
     def run(self):
@@ -74,15 +75,16 @@ class GPSHandler(Thread):
                 print("[GPS THREAD] Speed error!")
 
     def findDevice(self):
-        ports = list(serial.tools.list_ports.grep('/dev/ttyACM*'))
-        regexp = re.compile(r'GPS')
-        for port in ports:
-            while True:
+        while self.gps_detected == False:
+            ports = list(serial.tools.list_ports.grep('/dev/ttyACM*'))
+            regexp = re.compile(r'GPS')
+            for port in ports:
                 print("[GPS THREAD] Scanning USB Ports")
                 if regexp.search(str(port)):
                     print('[GPS THREAD] GPS module: ' + str(port.product) + " detected on port: " + str(port.device))
                     self.USB_port = port.device
+                    self.gps_detected = True
                     break
                 else:
                     print("[GPS THREAD] Can't find GPS USB device")
-                time.sleep(0.5)
+            time.sleep(0.5)

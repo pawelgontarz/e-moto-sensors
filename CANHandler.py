@@ -8,12 +8,13 @@ import serial.tools.list_ports
 import re
 
 class CAN_Data_Handler(Thread):
-    def __init__(self, parameters):
+    def __init__(self, parameters, debug):
         super().__init__()
         self.USB_port = ""
         self.bitRate = 250000
+        self.can_detected = False
         self.running = True
-        self.debug = False
+        self.debug = debug
         self.parameters = parameters
 
     def run(self):
@@ -31,21 +32,23 @@ class CAN_Data_Handler(Thread):
             except:
                 print("[CAN THREAD] Something goes wrong...")
                 time.sleep(1)
-        print("[CAN THREAD] Connected to USBTin port!")
+        print("[CAN THREAD] Connected to USBTin port successfully.")
 
     def findDevice(self):
-        ports = list(serial.tools.list_ports.grep('/dev/ttyACM*'))
-        regexp = re.compile(r'CAN')
-        for port in ports:
-            while True:
+        while self.can_detected == False:
+            ports = list(serial.tools.list_ports.grep('/dev/ttyACM*'))
+            regexp = re.compile(r'CAN')
+            for port in ports:
                 print("[CAN THREAD] Scanning USB Ports")
                 if regexp.search(str(port)):
                     print('[CAN THREAD] CAN module: ' + str(port.product) + " detected on port: " + str(port.device))
                     self.USB_port = port.device
+                    self.can_detected = True
                     break
                 else:
                     print("[CAN THREAD] Can't find CAN USB device")
-                time.sleep(0.5)
+            time.sleep(0.5)
+            print("[CAN THREAD] Searching CAN...")
 
     def log_data(self,msg):
         try:
