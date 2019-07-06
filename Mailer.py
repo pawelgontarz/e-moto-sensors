@@ -20,8 +20,8 @@ class ParametersController(Thread):
             time.sleep(1)
 
     def parameters_logger(self):
-        if(self.parameters.battery_temp >= self.battery_temp_limit or self.parameters.battery_voltage >= self.battery_voltage_limit):
-            msg = "Probably one of the parameters exceeeded the critical value. Please check them. \n\n" + "Battery temperature: " + str(self.parameters.battery_temp) + "\n" + "Battery voltage: " + str(self.parameters.battery_voltage) + "\n" + "Engine temperature: " + str(0) + "\n" + "Enginge voltage: " + str(0) + "\n \n" + "Motorcycle position: " + "\n" + "LAT: " + str(self.parameters.lat) + "\n" + "LON: " + str(self.parameters.lon) + "\n \n" + "*E-Moto Smart Systems 2019*"
+        if(self.parameters.average_cell_temp >= self.battery_temp_limit or self.parameters.total_cell_voltage >= self.battery_voltage_limit):
+            msg = "Probably one of the parameters exceeeded the critical value. Please check them. \n\n" + "Battery temperature: " + str(self.parameters.average_cell_temp) + "\n" + "Battery voltage: " + str(self.parameters.total_cell_voltage) + "\n" + "Engine temperature: " + str(0) + "\n" + "Enginge voltage: " + str(0) + "\n \n" + "Motorcycle position: " + "\n" + "LAT: " + str(self.parameters.lat) + "\n" + "LON: " + str(self.parameters.lon) + "\n \n" + "*E-Moto Smart Systems 2019*"
             self.send_email(self.subject,msg,self.fromaddr,self.password,self.toaddr)
             time.sleep(5)
     
