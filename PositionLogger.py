@@ -9,7 +9,7 @@ class PositionLogger(Thread):
         self.fromaddr="emoto.smartSystems@gmail.com"
         self.toaddr="gontarzpawe@gmail.com"
         self.password = "smartsystems2019"
-        self.subject = "E-Moto PIMPEK Parameters Logger"
+        self.subject = "E-Moto BOBER Parameters Logger"
         self.timestamp = 600#per 10min
 
     def run(self):
@@ -19,7 +19,7 @@ class PositionLogger(Thread):
 
     def position_logger(self):
         msg = "Motorcycle position: " + "\n\n" + "LATTITUDE: " + str(self.parameters.lat) + "\n" + "LONGITUDE: " + str(self.parameters.lon) + "\n \n" + "**Created by E-MOTO SMART SYSTEMS**"
-        self.send_email("E-Moto PIMPEK Position logger",msg,self.fromaddr,self.password,self.toaddr)
+        self.send_email("E-Moto BOBER Position logger",msg,self.fromaddr,self.password,self.toaddr)
 
     def send_email(self,subject,msg,fromaddr,password,toaddr):
         try:

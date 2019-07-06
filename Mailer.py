@@ -9,7 +9,7 @@ class ParametersController(Thread):
         self.fromaddr="emoto.smartSystems@gmail.com"
         self.toaddr="gontarzpawe@gmail.com"
         self.password = "smartsystems2019"
-        self.subject = "E-Moto PIMPEK Parameters Logger"
+        self.subject = "E-Moto BOBER Parameters Logger"
         #params limits
         self.battery_temp_limit = 80
         self.battery_voltage_limit = 100
@@ -28,7 +28,7 @@ class ParametersController(Thread):
     def position_logger(self):
         while True:
             msg = "Motorcycle position: " + "\n\n" + "LATTITUDE: " + str(self.parameters.lat) + "\n" + "LONGITUDE: " + str(self.parameters.lon) + "\n \n" + "**Created by E-MOTO SMART SYSTEMS**"
-            self.send_email("E-Moto PIMPEK Position logger",msg,self.fromaddr,self.password,self.toaddr)
+            self.send_email("E-Moto BOBER Position logger",msg,self.fromaddr,self.password,self.toaddr)
             time.sleep(5)
 
     def send_email(self,subject,msg,fromaddr,password,toaddr):
