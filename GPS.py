@@ -58,7 +58,8 @@ class GPSHandler(Thread):
                 self.parameters.lat = latitude
                 self.parameters.lon = longitude
                 if debug == True:
-                    print(str(latitude) + ' ' + str(longitude))
+                    print("[GPS THREAD] Moto LAT: " + str(moto_parameters.lat))
+                    print("[GPS THREAD] Moto LON: " + str(moto_parameters.lon))
             except:
                 print("[GPS THREAD] Lat/lon error!")
 
@@ -88,3 +89,4 @@ class GPSHandler(Thread):
                 else:
                     print("[GPS THREAD] Can't find GPS USB device")
             time.sleep(0.5)
+            print("[GPS THREAD] Searching GPS...")

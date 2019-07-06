@@ -89,6 +89,3 @@ class CAN_Data_Handler(Thread):
             self.parameters.estimated_energy = decoded_data['estimated_energy']
             self.parameters.estimated_distance_left = decoded_data['estimated_distance_left']
             self.parameters.distance_traveled = decoded_data['distance_traveled']
-
-
-    

@@ -1,7 +1,14 @@
 from Parameters import Parameters
 from GPS import GPSHandler
 from CANHandler import CAN_Data_Handler
-import time
+from UartHandler import UARTHandler
+from Decoder import DECODERS
+from Mailer import ParametersController
+from PositionLogger import PositionLogger
+from BluetoothHandler import BluetoothHandler
+from pyusbtin.usbtin import USBtin
+from pyusbtin.canmessage import CANMessage
+from time import sleep
 import socket
 import threading
 import serial
@@ -20,9 +27,25 @@ can.start()
 gps = GPSHandler(moto_parameters, debug)
 gps.start()
 
-file=open("/home/parallels/Desktop/log1.txt","w")
-file.write("Connected to USBTin CAN Converter!")
-file.close()
+#UART CONNECTION
+uartHandler = UARTHandler(moto_parameters, debug)
+uartHandler.start()
+
+#BlUETOOTH CONNECTION
+bluetoothHandler = BluetoothHandler(moto_parameters, debug)
+bluetoothHandler.start()
+
+# GPS CONNECTION
+gps = GPSHandler(moto_parameters, debug)
+gps.start()
+
+# ParametersController
+parametersController = ParametersController(moto_parameters)
+parametersController.start()
+
+# Position Logger
+positionLogger = PositionLogger(moto_parameters)
+positionLogger.start()
 
 #CREATE SERVER
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -47,7 +70,7 @@ while True:
                     connection.sendall(str(moto_parameters.max_cell_voltage).encode())
                 elif(data.decode("utf-8")=="average_cell_voltage"):
                     connection.sendall(str(moto_parameters.average_cell_voltage).encode())
-                elif(data.decode("utf-8")=="total_cell_voltage"):
+                elif(data.decode("utf-8")=="battery_voltage"): #<----------battery_voltage_parameters
                     connection.sendall(str(moto_parameters.total_cell_voltage).encode())
                 elif(data.decode("utf-8")=="min_cell_module_temp"): #cell_module_temperature_overall_parameters
                     connection.sendall(str(moto_parameters.min_cell_module_temp).encode())
@@ -59,22 +82,26 @@ while True:
                     connection.sendall(str(moto_parameters.min_cell_temp).encode())
                 elif(data.decode("utf-8")=="max_cell_temp"): 
                     connection.sendall(str(moto_parameters.max_cell_temp).encode()) 
-                elif(data.decode("utf-8")=="average_cell_temp"): 
+                elif(data.decode("utf-8")=="battery_temp"): #<----------battery_temp
                     connection.sendall(str(moto_parameters.average_cell_temp).encode())  
-                elif(data.decode("utf-8")=="battery_current"): #state_of_charge_parameters
+                elif(data.decode("utf-8")=="battery_current"): #<----------battery_current
                     connection.sendall(str(moto_parameters.battery_current).encode())
                 elif(data.decode("utf-8")=="estimated_charge"): 
                     connection.sendall(str(moto_parameters.estimated_charge).encode()) 
-                elif(data.decode("utf-8")=="estimated_state_of_charge"): 
+                elif(data.decode("utf-8")=="estimated_state_of_charge"): #<----------estimated_state_of_charge
                     connection.sendall(str(moto_parameters.estimated_state_of_charge).encode())   
                 elif(data.decode("utf-8")=="estimated_consumption"): #energy_parameters
                     connection.sendall(str(moto_parameters.estimated_consumption).encode())
                 elif(data.decode("utf-8")=="estimated_energy"): 
                     connection.sendall(str(moto_parameters.estimated_energy).encode()) 
-                elif(data.decode("utf-8")=="estimated_distance_left"): 
+                elif(data.decode("utf-8")=="distance_left"): #distance_left
                     connection.sendall(str(moto_parameters.estimated_distance_left).encode())   
                 elif(data.decode("utf-8")=="distance_traveled"): 
                     connection.sendall(str(moto_parameters.distance_traveled).encode())  
+                elif(data.decode("utf-8")=="engine_current"): #<----------engine_current
+                    connection.sendall(str(moto_parameters.engine_current).encode())
+                elif(data.decode("utf-8")=="engine_temp"): #<----------engine_temperature
+                    connection.sendall(str(moto_parameters.engine_temp).encode())
                 elif(data.decode("utf-8")=="speed"): #gps_parameters
                     connection.sendall(str(moto_parameters.speed).encode())    
                 elif(data.decode("utf-8")=="lat"):
@@ -82,13 +109,17 @@ while True:
                     print("Moto LAT: " + str(moto_parameters.lat))  
                 elif(data.decode("utf-8")=="lon"): 
                     connection.sendall(str(moto_parameters.lon).encode())     
-                    print("Moto LON: " + str(moto_parameters.lon))         
+                    print("Moto LON: " + str(moto_parameters.lon))  
+                elif(data.decode("utf-8")=="button"): #button data
+                    connection.sendall(str(moto_parameters.button).encode())
+                elif(data.decode("utf-8")=="bluetooth"): #bluetooth data
+                    connection.sendall(str(moto_parameters.bluetoothData).encode())        
                 else:
                     print("[Server] No request from client.")
             else:
                 print('[Server] No more data from: ', client_address)
                 break
-            time.sleep(0.4)      
+            sleep(0.015)      
     finally:
         connection.close()
 
