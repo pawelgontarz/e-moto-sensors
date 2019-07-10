@@ -47,7 +47,9 @@ class DECODERS:
 
     @staticmethod
     def state_of_charge_parameters(data, debug):
-        battery_current = int((hex(data[0])[2:] + hex(data[1])[2:]),16) // 10
+        battery_current = (65536 - int((hex(data[0])[2:] + hex(data[1])[2:]),16)) // 10
+        if(battery_current > 6500):
+            battery_current = int((hex(data[0])[2:] + hex(data[1])[2:]),16) // 10
         estimated_charge = int((hex(data[2])[2:] + hex(data[3])[2:]),16) // 10
         estimated_state_of_charge = data[6] 
         decoded_data = {

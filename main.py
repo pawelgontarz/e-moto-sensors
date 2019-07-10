@@ -14,7 +14,7 @@ import threading
 import serial
 import random
 
-debug = False
+debug = True
 
 # CREATE PARAMETERS OBJECT
 moto_parameters = Parameters()
@@ -34,10 +34,6 @@ uartHandler.start()
 #BlUETOOTH CONNECTION
 bluetoothHandler = BluetoothHandler(moto_parameters, debug)
 bluetoothHandler.start()
-
-# GPS CONNECTION
-gps = GPSHandler(moto_parameters, debug)
-gps.start()
 
 # ParametersController
 parametersController = ParametersController(moto_parameters)
@@ -106,20 +102,18 @@ while True:
                     connection.sendall(str(moto_parameters.speed).encode())    
                 elif(data.decode("utf-8")=="lat"):
                     connection.sendall(str(moto_parameters.lat).encode())  
-                    print("Moto LAT: " + str(moto_parameters.lat))  
                 elif(data.decode("utf-8")=="lon"): 
                     connection.sendall(str(moto_parameters.lon).encode())     
-                    print("Moto LON: " + str(moto_parameters.lon))  
                 elif(data.decode("utf-8")=="button"): #button data
                     connection.sendall(str(moto_parameters.button).encode())
                 elif(data.decode("utf-8")=="bluetooth"): #bluetooth data
                     connection.sendall(str(moto_parameters.bluetoothData).encode())        
-                else:
-                    print("[Server] No request from client.")
             else:
                 print('[Server] No more data from: ', client_address)
                 break
             sleep(0.015)      
+    except:
+        print("Thick!")
     finally:
         connection.close()
 
