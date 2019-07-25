@@ -25,23 +25,23 @@ can.start()
 
 # GPS CONNECTION
 gps = GPSHandler(moto_parameters, debug)
-gps.start()
+#gps.start()
 
 #UART CONNECTION
 uartHandler = UARTHandler(moto_parameters, debug)
-uartHandler.start()
+#uartHandler.start()
 
 #BlUETOOTH CONNECTION
 bluetoothHandler = BluetoothHandler(moto_parameters, debug)
-bluetoothHandler.start()
+#bluetoothHandler.start()
 
 # ParametersController
 parametersController = ParametersController(moto_parameters)
-parametersController.start()
+#parametersController.start()
 
 # Position Logger
 positionLogger = PositionLogger(moto_parameters)
-positionLogger.start()
+#positionLogger.start()
 
 #CREATE SERVER
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -56,7 +56,7 @@ while True:
     connection, client_address = sock.accept()
     try:
         print ('[Server] Connection from: ', client_address)  
-        while True:           
+        while False:           
             data = connection.recv(1024)
             #print("[Server] Request: " + data.decode("utf-8"))
             if data:
